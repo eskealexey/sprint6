@@ -24,6 +24,7 @@ class TowerDefenseGame:
         self.shoot_sound = pygame.mixer.Sound(self.settings.shoot_sound)
         self.selected_tower_type = 'basic'
         self.is_game_over = False
+        self.show_positions = False  # Переменная для отслеживания состояния отображения позиций
 
     def game_over(self):
         self.is_game_over = True
@@ -44,12 +45,19 @@ class TowerDefenseGame:
                 elif event.key == pygame.K_2:
                     self.selected_tower_type = 'sniper'
                     print("Selected sniper tower.")
+                elif event.key == pygame.K_SPACE:
+                    self.show_positions = not self.show_positions
+                    print("Show positions:", self.show_positions)
+
+
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if self.selected_tower_type:
                     mouse_pos = pygame.mouse.get_pos()
                     self.level.attempt_place_tower(mouse_pos, self.selected_tower_type)
                 else:
                     print("No tower type selected.")
+
+
 
     def _update_game(self):
         self.level.update()
@@ -76,7 +84,8 @@ class TowerDefenseGame:
         else:
             self.screen.blit(self.background, (0, 0))
             self.level.draw(self.screen)
-            self.grid.draw()
+            if self.show_positions:
+                self.grid.draw()
 
             money_text = self.font.render(f"Money: ${self.settings.starting_money}", True, (255, 255, 255))
             tower_text = self.font.render(

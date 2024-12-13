@@ -10,13 +10,21 @@ class Grid:
         self.towers = []
 
     def update(self):
-        pass
+        """"Обновление сетки"""
+        for tower in self.towers:
+            tower.update()
 
     def draw(self):
+        """Отрисовка сетки"""
         for spot in self.available_spots:
             pygame.draw.circle(self.screen, (0, 255, 0), spot, 15, 2)
 
+
+
     def place_tower(self, tower=None):
+        """
+        Помещаем башню на сетку
+        """
         grid_pos = self.get_grid_position(tower.position)
         if grid_pos in self.available_spots and not any(tower.rect.collidepoint(grid_pos) for tower in self.towers):
             self.towers.append(tower)
@@ -24,6 +32,7 @@ class Grid:
         return False
 
     def remove_tower(self, tower):
+        """Удаляем башню из списка"""
         if tower in self.towers:
             self.towers.remove(tower)
 
@@ -42,4 +51,7 @@ class Grid:
         return grid_x, grid_y
 
     def is_spot_available(self, grid_pos):
+        """
+        Проверяем, доступна ли клетка для установки башни.
+        """
         return grid_pos in self.available_spots and all(not tower.rect.collidepoint(grid_pos) for tower in self.towers)
