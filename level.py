@@ -1,9 +1,11 @@
+"""This is the level class"""
 import pygame
 from enemy import Enemy
 from tower import BasicTower, SniperTower
 
 
 class Level:
+    """This is the level class"""
     def __init__(self, game):
         self.game = game
         self.enemies = pygame.sprite.Group()
@@ -23,11 +25,13 @@ class Level:
         self.font = pygame.font.SysFont("Arial", 24)
 
     def start_next_wave(self):
+        """This is the start_next_wave method"""
         if self.current_wave < len(self.waves):
             self.spawned_enemies = 0
             self.spawn_next_enemy()
 
     def spawn_next_enemy(self):
+        """This is the spawn_next_enemy method"""
         if self.spawned_enemies < len(self.waves[self.current_wave]):
             enemy_info = self.waves[self.current_wave][self.spawned_enemies]
             new_enemy = Enemy(**enemy_info, game=self.game)
@@ -35,6 +39,7 @@ class Level:
             self.spawned_enemies += 1
 
     def attempt_place_tower(self, mouse_pos, tower_type):
+        """This is the attempt_place_tower method"""
         tower_classes = {'basic': BasicTower, 'sniper': SniperTower}
         if tower_type in tower_classes and self.game.settings.starting_money >= self.game.settings.tower_cost:
             grid_pos = self.game.grid.get_grid_position(mouse_pos)
@@ -49,6 +54,7 @@ class Level:
             print("Not enough money or unknown tower type.")
 
     def update(self):
+        """This is the update method"""
         current_time = pygame.time.get_ticks()
 
         if self.current_wave < len(self.waves) and self.spawned_enemies < len(self.waves[self.current_wave]):
@@ -77,11 +83,13 @@ class Level:
             self.all_waves_complete = True
 
     def draw_path(self, screen):
+        """This is the draw_path method"""
         pygame.draw.lines(screen, (0, 128, 0), False, self.game.settings.enemy_path, 5)
         for pos in self.game.settings.tower_positions:
             pygame.draw.circle(screen, (128, 0, 0), pos, 10)
 
     def draw(self, screen):
+        """This is the draw method"""
         self.draw_path(screen)
         self.enemies.draw(screen)
         self.towers.draw(screen)

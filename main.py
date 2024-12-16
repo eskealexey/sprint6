@@ -1,3 +1,6 @@
+"""
+Main file for the project
+"""
 import pygame
 import sys
 from settings import Settings
@@ -5,6 +8,9 @@ from level import Level
 from grid import Grid
 
 class TowerDefenseGame:
+    """
+    Main class for the game
+    """
     def __init__(self):
         pygame.init()
         self.settings = Settings()
@@ -27,6 +33,9 @@ class TowerDefenseGame:
         self.show_positions = False  # Переменная для отслеживания состояния отображения позиций
 
     def game_over(self):
+        """
+        Function to handle game over state
+        """
         self.is_game_over = True
 
     def is_position_inside(self, pos):
@@ -34,6 +43,9 @@ class TowerDefenseGame:
         return 0 <= pos.x <= self.settings.screen_width and 0 <= pos.y <= self.settings.screen_height
 
     def _check_events(self):
+        """
+        Function to handle events
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -60,16 +72,21 @@ class TowerDefenseGame:
 
 
     def _update_game(self):
+        """
+        Function to update the game
+        """
         self.level.update()
         self.grid.update()
 
     def _draw_win_screen(self):
+        """Function to draw the win screen"""
         win_text = "You Win!"
         win_render = self.font.render(win_text, True, (255, 215, 0))
         win_rect = win_render.get_rect(center=(self.settings.screen_width/2, self.settings.screen_height/2))
         self.screen.blit(win_render, win_rect)
 
     def _draw_game_over_screen(self):
+        """Function to draw the game over screen"""
         self.screen.fill((0, 0, 0))
 
         game_over_text = "Game Over!"
@@ -79,6 +96,9 @@ class TowerDefenseGame:
         self.screen.blit(game_over_render, game_over_rect)
 
     def _draw(self):
+        """
+        Function to draw the game
+        """
         if self.is_game_over:
             self._draw_game_over_screen()
         else:
@@ -106,13 +126,16 @@ class TowerDefenseGame:
         pygame.display.flip()
 
     def run_game(self):
+        """
+        Function to run the game
+        """
         while True:
             self._check_events()
             self._update_game()
 
+
             if len(self.level.enemies) == 0 and not self.level.all_waves_complete:
                 self.level.start_next_wave()
-
             self._draw()
             self.clock.tick(60)
 

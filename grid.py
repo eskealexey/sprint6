@@ -1,7 +1,9 @@
+"""Grid class"""
 import pygame
 
 
 class Grid:
+    """Grid class"""
     def __init__(self, game):
         self.game = game
         self.settings = game.settings
@@ -11,8 +13,9 @@ class Grid:
 
     def update(self):
         """"Обновление сетки"""
-        for tower in self.towers:
-            tower.update()
+        # for tower in self.towers:
+        #     tower.update()
+        pass
 
     def draw(self):
         """Отрисовка сетки"""
