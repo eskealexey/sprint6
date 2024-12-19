@@ -13,9 +13,9 @@ class Grid:
 
     def update(self):
         """"Обновление сетки"""
-        # for tower in self.towers:
-        #     tower.update()
-        pass
+        for tower in self.towers:
+            tower.update()
+        # pass
 
     def draw(self):
         """Отрисовка сетки"""

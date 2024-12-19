@@ -1,9 +1,11 @@
+"""tower.py"""
 import pygame
 from bullet import Bullet
 import math
 
 
 class Tower(pygame.sprite.Sprite):
+    """Tower"""
     def __init__(self, position, game):
         super().__init__()
         self.position = pygame.math.Vector2(position)
@@ -19,9 +21,13 @@ class Tower(pygame.sprite.Sprite):
         self.original_image = self.image
 
     def upgrade_cost(self):
+        """
+        Returns the cost of upgrading the tower
+        """
         return 100 * self.level
 
     def draw(self, screen):
+        """Draws the tower"""
         mouse_pos = pygame.mouse.get_pos()
         if self.is_hovered(mouse_pos):
             level_text = self.game.font.render(f"Level: {self.level}", True, (255, 255, 255))
@@ -34,6 +40,11 @@ class Tower(pygame.sprite.Sprite):
             screen.blit(upgrade_cost_text, upgrade_cost_pos)
 
     def update(self, enemies, current_time, bullets_group):
+        """
+        Updates the tower
+        """
+        self.image = self.original_image
+        self.rect = self.image.get_rect(center=self.position)
         if current_time - self.last_shot_time > self.rate_of_fire:
             target = self.find_target(enemies)
             if target:
@@ -41,13 +52,21 @@ class Tower(pygame.sprite.Sprite):
                 self.shoot(target, bullets_group)
                 self.last_shot_time = current_time
 
+
     def is_hovered(self, mouse_pos):
+        """Checks if the mouse is hovering over the tower"""
         return self.rect.collidepoint(mouse_pos)
 
     def shoot(self, target, bullets_group):
+        """
+        Shoots a bullet at the target
+        """
         pass
 
     def rotate_towards_target(self, target):
+        """
+        Поворачивает башню в сторону цели
+        """
         dx = target.position.x - self.position.x
         dy = target.position.y - self.position.y
         # Вычисляем угол в радианах
@@ -59,6 +78,9 @@ class Tower(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.position)
 
     def find_target(self, enemies):
+        """
+        Находит ближайшую цель в радиусе действия башни
+        """
         nearest_enemy = None
         min_distance = float('inf')
         for enemy in enemies:
@@ -73,6 +95,7 @@ class Tower(pygame.sprite.Sprite):
 
 
 class BasicTower(Tower):
+    """Basic tower"""
     def __init__(self, position, game):
         super().__init__(position, game)
         self.image = pygame.image.load('assets/towers/basic_tower.png').convert_alpha()
@@ -83,11 +106,13 @@ class BasicTower(Tower):
         self.rate_of_fire = 1000
 
     def shoot(self, target, bullets_group):
+        """Shoots a bullet at the target"""
         new_bullet = Bullet(self.position, target.position, self.damage, self.game)
         bullets_group.add(new_bullet)
 
 
 class SniperTower(Tower):
+    """Sniper tower"""
     def __init__(self, position, game):
         super().__init__(position, game)
         self.image = pygame.image.load('assets/towers/sniper_tower.png').convert_alpha()
@@ -99,6 +124,9 @@ class SniperTower(Tower):
         self.rate_of_fire = 2000
 
     def find_target(self, enemies):
+        """
+        Находит ближайшую цель в радиусе действия башни
+        """
         healthiest_enemy = None
         max_health = 0
         for enemy in enemies:
@@ -108,5 +136,24 @@ class SniperTower(Tower):
         return healthiest_enemy
 
     def shoot(self, target, bullets_group):
+        """Shoots a bullet at the target"""
         new_bullet = Bullet(self.position, target.position, self.damage, self.game)
         bullets_group.add(new_bullet)
+
+
+class MoneyTower(Tower):
+    """Money tower"""
+    def __init__(self, position, game):
+        super().__init__(position, game)
+        self.starting_money = None
+        self.image = pygame.image.load('assets/towers/towerDefense_tile203.png').convert_alpha()
+        self.image = pygame.transform.rotate(self.image, 90)
+        self.original_image = self.image
+        self.rect = self.image.get_rect(center=self.position)
+        self.tower_range = 300
+        self.damage = 40
+        self.rate_of_fire = 2000
+
+    def shoot(self, target, bullets_group):
+        self.game.settings.starting_money += 50
+        

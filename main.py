@@ -57,6 +57,10 @@ class TowerDefenseGame:
                 elif event.key == pygame.K_2:
                     self.selected_tower_type = 'sniper'
                     print("Selected sniper tower.")
+                elif event.key == pygame.K_3:
+                    self.selected_tower_type = 'money'
+                    print("Selected money tower.")
+
                 elif event.key == pygame.K_SPACE:
                     self.show_positions = not self.show_positions
                     print("Show positions:", self.show_positions)
